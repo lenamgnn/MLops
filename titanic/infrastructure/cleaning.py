@@ -1,4 +1,5 @@
 import pandas as pd
+import os.path
 
 def drop_unnecessary_columns(df, columns):
     """
@@ -53,3 +54,61 @@ def encode_categorical_features(df, columns):
         df[col] = df[col].astype('category').cat.codes
     return df
 
+
+def create_age_groups(df):
+    """
+    Crée une nouvelle colonne "AgeGroup" pour catégoriser les âges en groupes : enfant, adulte, senior.
+
+    Args:
+        df (pd.DataFrame): DataFrame contenant une colonne "Age".
+
+    Returns:
+        pd.DataFrame: DataFrame avec une nouvelle colonne "AgeGroup".
+    """
+    bins = [0, 18, 60, 120]
+    labels = ['Enfant', 'Adulte', 'Senior']
+    df['AgeGroup'] = pd.cut(df['Age'], bins=bins, labels=labels, right=False)
+    return df
+
+def clean_data(df):
+    """
+    Nettoie les données Titanic :
+    - Supprime les colonnes inutiles
+    - Gère les valeurs manquantes
+    - Encode les colonnes catégoriques
+    - Crée une colonne "AgeGroup" pour les groupes d'âge
+
+    Args:
+        df (pd.DataFrame): Données brutes.
+
+    Returns:
+        pd.DataFrame: Données nettoyées.
+    """
+    # Supprimer les colonnes inutiles
+    columns_to_drop = ['Cabin', 'Ticket']
+    df = drop_unnecessary_columns(df, columns_to_drop)
+
+    # Gérer les valeurs manquantes
+    df = handle_missing_values(df, strategy='median', columns=['Age', 'Fare'])
+
+    # Encoder les colonnes catégoriques
+    categorical_columns = ['Sex', 'Embarked']
+    df = encode_categorical_features(df, categorical_columns)
+
+    # Créer des groupes d'âge
+    df = create_age_groups(df)
+
+    return df
+
+if __name__ == "__main__":
+    # Exemple d'utilisation
+    file_path = "/MLops/data/raw/train.csv"
+    df = pd.read_csv(file_path)
+
+    print("Données avant nettoyage :")
+    print(df.head())
+
+    df_cleaned = clean_data(df)
+
+    print("Données après nettoyage :")
+    print(df_cleaned.head())
