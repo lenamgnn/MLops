@@ -63,8 +63,9 @@ def load_train_test_data(train_path, test_path):
 
 if __name__ == "__main__":
     # Exemple d'utilisation
-    train_path = "data/raw/train.csv"
-    test_path = "data/raw/test.csv"
+    train_path = "MLops/data/raw/train.csv"
+    test_path = "MLops/data/raw/test.csv"
+
 
     # Charger les données
     train_df, test_df = load_train_test_data(train_path, test_path)
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     print(test_df.head())
 
     # Sauvegarder un exemple après modification
-    processed_path = "data/processed/processed_train.csv"
+    processed_path = "MLops/data/processed/processed_train.csv"
     save_data(train_df, processed_path)
 
 
