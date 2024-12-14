@@ -41,3 +41,43 @@ def save_data(df, output_path):
     print(f"Données sauvegardées avec succès dans {output_path}.")
 
 
+def load_train_test_data(train_path, test_path):
+    """
+    Charge les fichiers CSV de train et de test.
+
+    Args:
+        train_path (str): Chemin vers le fichier d'entraînement (train.csv).
+        test_path (str): Chemin vers le fichier de test (test.csv).
+
+    Returns:
+        tuple: (DataFrame pour train, DataFrame pour test)
+    """
+    print("Chargement des données d'entraînement...")
+    train_df = load_data(train_path)
+
+    print("Chargement des données de test...")
+    test_df = load_data(test_path)
+
+    print("Données chargées avec succès.")
+    return train_df, test_df
+
+if __name__ == "__main__":
+    # Exemple d'utilisation
+    train_path = "data/raw/train.csv"
+    test_path = "data/raw/test.csv"
+
+    # Charger les données
+    train_df, test_df = load_train_test_data(train_path, test_path)
+
+    # Exemple d'accès aux premières lignes des DataFrames
+    print("Aperçu des données d'entraînement :")
+    print(train_df.head())
+
+    print("Aperçu des données de test :")
+    print(test_df.head())
+
+    # Sauvegarder un exemple après modification
+    processed_path = "data/processed/processed_train.csv"
+    save_data(train_df, processed_path)
+
+
