@@ -4,10 +4,17 @@ from sklearn.compose import ColumnTransformer
 import pandas as pd
 import os
 import sys
+
 # Ajouter le répertoire racine MLops au PYTHONPATH
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-from infrastructure.cleaning import clean_and_save_data
+current_dir = os.path.dirname(__file__)
+project_root = os.path.abspath(os.path.join(current_dir, "../../"))
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
+# Importer les modules nécessaires
+from titanic.infrastructure.cleaning import clean_and_save_data
 from data.data_loader import load_data
+
 
 def prepare_data(input_path, target_column='Survived'):
     """
@@ -22,7 +29,7 @@ def prepare_data(input_path, target_column='Survived'):
         tuple: X_train, X_test, y_train, y_test
     """
     # Définir le chemin des données nettoyées
-    output_path = "data/processed/cleaned_train.csv"
+    output_path = os.path.join(project_root, "data/processed/cleaned_train.csv")
 
     # Nettoyer les données si le fichier nettoyé n'existe pas
     if not os.path.exists(output_path):
@@ -42,7 +49,7 @@ def prepare_data(input_path, target_column='Survived'):
     preprocessor = ColumnTransformer(
         transformers=[
             ('num', StandardScaler(), numeric_features),
-            ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features)
+            ('cat', OneHotEncoder(handle_unknown='ignore', sparse_output=False), categorical_features)
         ]
     )
 
@@ -54,14 +61,19 @@ def prepare_data(input_path, target_column='Survived'):
 
     return X_train, X_test, y_train, y_test
 
+
 if __name__ == "__main__":
     # Chemin vers les données brutes
-    input_path = "data/raw/train.csv"
+    input_path = os.path.join(project_root, "data/raw/train.csv")
 
     print("Préparation des données en cours...")
 
-    # Préparer les données
-    X_train, X_test, y_train, y_test = prepare_data(input_path)
+    try:
+        # Préparer les données
+        X_train, X_test, y_train, y_test = prepare_data(input_path)
 
-    print("Nombre d'échantillons dans l'ensemble d'entraînement :", len(X_train))
-    print("Nombre d'échantillons dans l'ensemble de test :", len(X_test))
+        print("Nombre d'échantillons dans l'ensemble d'entraînement :", len(X_train))
+        print("Nombre d'échantillons dans l'ensemble de test :", len(X_test))
+
+    except Exception as e:
+        print("Erreur lors de la préparation des données :", e)
