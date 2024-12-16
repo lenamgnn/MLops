@@ -1,11 +1,11 @@
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import os
 
 def train_model(X_train, y_train):
     """
-    Entraîne un modèle Random Forest sur les données d'entraînement.
+    Entraîne un modèle Gradient Boosting sur les données d'entraînement.
 
     Args:
         X_train (array-like): Données d'entraînement.
@@ -14,11 +14,11 @@ def train_model(X_train, y_train):
     Returns:
         model: Modèle entraîné.
     """
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model = GradientBoostingClassifier(n_estimators=200, learning_rate=0.1, random_state=42)
     model.fit(X_train, y_train)
     return model
 
-def save_model(model, file_path="models/random_forest.pkl"):
+def save_model(model, file_path="models/gradient_boosting.pkl"):
     """
     Sauvegarde un modèle entraîné dans un fichier.
 
@@ -33,7 +33,7 @@ def save_model(model, file_path="models/random_forest.pkl"):
     joblib.dump(model, file_path)
     print(f"Modèle sauvegardé dans {file_path}.")
 
-def load_model(file_path="models/random_forest.pkl"):
+def load_model(file_path="models/gradient_boosting.pkl"):
     """
     Charge un modèle sauvegardé depuis un fichier.
 
