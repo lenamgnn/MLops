@@ -65,14 +65,12 @@ def evaluate_model(model, X_test, y_test):
     print(classification_report(y_test, y_pred))
 
 if __name__ == "__main__":
-    # Exemple d'exécution (remplacez par les chemins et données réels)
     from pipeline import prepare_data
 
     # Préparer les données
     input_path = "data/raw/train.csv"
     X_train, X_test, y_train, y_test = prepare_data(input_path)
 
-    # Entraîner le modèle
     model = train_model(X_train, y_train)
 
     # Sauvegarder le modèle
