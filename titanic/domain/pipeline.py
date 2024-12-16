@@ -41,7 +41,7 @@ def prepare_data(df, target_column='Survived'):
 
 if __name__ == "__main__":
     # Exemple d'utilisation
-    cleaned_data_path = "MLOPS/data/processed/cleaned_train.csv"
+    cleaned_data_path = "/workspaces/MLOPS/data/processed/cleaned_train.csv"
     df = pd.read_csv(cleaned_data_path)
 
     print("Données nettoyées avant préparation :")
