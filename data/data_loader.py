@@ -83,5 +83,5 @@ if __name__ == "__main__":
     print(test_df.head())
 
     # Sauvegarder un exemple après modification
-    processed_path = "data/processed/processed_train.csv"
+    processed_path = "processed/processed_train.csv"
     save_data(train_df, processed_path)
