@@ -1,5 +1,13 @@
 import pandas as pd
-import os.path
+import os
+import sys
+
+# Ajouter le répertoire racine MLops au PYTHONPATH
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
+# Importer le module data_loader
+from data.data_loader import load_data
+
 
 def drop_unnecessary_columns(df, columns):
     """
@@ -13,6 +21,7 @@ def drop_unnecessary_columns(df, columns):
         pd.DataFrame: DataFrame sans les colonnes spécifiées.
     """
     return df.drop(columns=columns, errors='ignore')
+
 
 def handle_missing_values(df, strategy='median', columns=None):
     """
@@ -38,6 +47,7 @@ def handle_missing_values(df, strategy='median', columns=None):
             df[col] = df[col].fillna(df[col].mode()[0])
 
     return df
+
 
 def encode_categorical_features(df, columns):
     """
@@ -70,6 +80,7 @@ def create_age_groups(df):
     df['AgeGroup'] = pd.cut(df['Age'], bins=bins, labels=labels, right=False)
     return df
 
+
 def clean_data(df):
     """
     Nettoie les données Titanic :
@@ -100,9 +111,18 @@ def clean_data(df):
 
     return df
 
+
 if __name__ == "__main__":
     # Exemple d'utilisation
-    file_path = "/MLops/data/raw/train.csv"
+    # Utilisation d'un chemin relatif au lieu du chemin absolu
+    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
+    file_path = os.path.join(BASE_DIR, "data/raw/train.csv")
+    
+    # Vérifier si le fichier existe
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+
+    # Charger les données
     df = pd.read_csv(file_path)
 
     print("Données avant nettoyage :")
