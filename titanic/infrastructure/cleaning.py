@@ -112,23 +112,23 @@ def clean_data(df):
     return df
 
 
-if __name__ == "__main__":
-    # Exemple d'utilisation
-    # Utilisation d'un chemin relatif au lieu du chemin absolu
-    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
-    file_path = os.path.join(BASE_DIR, "data/raw/train.csv")
-    
-    # Vérifier si le fichier existe
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+def clean_and_save_data(input_path, output_path):
+    """
+    Nettoie les données chargées depuis un chemin et les sauvegarde.
+    """
+    # Charger les données brutes
+    df = load_data(input_path)
 
-    # Charger les données
-    df = pd.read_csv(file_path)
-
-    print("Données avant nettoyage :")
-    print(df.head())
-
+    # Nettoyer les données
     df_cleaned = clean_data(df)
 
-    print("Données après nettoyage :")
-    print(df_cleaned.head())
+    # Sauvegarder les données nettoyées
+    df_cleaned.to_csv(output_path, index=False)
+    print(f"Données nettoyées sauvegardées dans {output_path}.")
+
+
+if __name__ == "__main__":
+    # Exemple d'utilisation
+    input_path = "raw/train.csv"
+    output_path = "data/processed/cleaned_train.csv"
+    clean_and_save_data(input_path, output_path)
