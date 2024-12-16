@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
@@ -77,3 +78,5 @@ if __name__ == "__main__":
 
     except Exception as e:
         print("Erreur lors de la préparation des données :", e)
+=======
+>>>>>>> 25ea234 (savegarde tempo)
