@@ -17,19 +17,14 @@ from titanic.infrastructure.cleaning import clean_and_save_data
 from data.data_loader import load_data
 
 
-import os
-import pandas as pd
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.model_selection import train_test_split
 
-def prepare_data(input_path, target_column='Survived', is_train=True, test_size=0.2, random_state=42):
+def prepare_data(data, target_column='Survived', is_train=True, test_size=0.2, random_state=42):
     """
     Prépare les données pour l'entraînement ou le test.
-    Applique l'encodage pour les variables catégoriques et la standardisation pour les variables numériques.
+    Accepte un chemin de fichier ou un DataFrame comme entrée.
 
     Args:
-        input_path (str): Chemin vers les données brutes.
+        data (str or pd.DataFrame): Chemin vers les données ou DataFrame.
         target_column (str): Nom de la colonne cible (utilisé uniquement pour les données d'entraînement).
         is_train (bool): Indique si les données sont pour l'entraînement ou le test.
         test_size (float): Proportion des données pour le test (utilisé pour les données d'entraînement).
@@ -40,9 +35,14 @@ def prepare_data(input_path, target_column='Survived', is_train=True, test_size=
             - Si is_train=True: (X_train, X_test, y_train, y_test)
             - Si is_train=False: (X_test,)
     """
-    # Charger les données
-    df = pd.read_csv(input_path)
-
+    # Charger les données si un chemin est fourni
+    if isinstance(data, str):
+        df = pd.read_csv(data)
+    elif isinstance(data, pd.DataFrame):
+        df = data
+    else:
+        raise ValueError("L'argument 'data' doit être un chemin vers un fichier ou un DataFrame.")
+    
     # Cas des données d'entraînement
     if is_train:
         # Extraire la cible et les caractéristiques
@@ -76,7 +76,7 @@ def prepare_data(input_path, target_column='Survived', is_train=True, test_size=
 
     # Cas des données de test (aucune cible à extraire)
     else:
-        X_test = df.copy()  # Garder toutes les colonnes pour les données de test
+        X_test = df.copy()
         
         # Identifier les colonnes catégoriques et numériques
         categorical_features = X_test.select_dtypes(include=['category', 'object']).columns
@@ -95,6 +95,7 @@ def prepare_data(input_path, target_column='Survived', is_train=True, test_size=
         X_test_transformed = pd.DataFrame(X_test_transformed, columns=preprocessor.get_feature_names_out())
         
         return X_test_transformed,
+
 
 
 if __name__ == "__main__":
