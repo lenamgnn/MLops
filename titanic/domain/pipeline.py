@@ -41,7 +41,7 @@ def prepare_data(input_path, target_column='Survived'):
 
     # Identifier les colonnes
     X = df.drop(columns=[target_column])
-    y = df[target_column]
+    if target_column is not None : y = df[target_column]
 
     categorical_features = X.select_dtypes(include=['category', 'object']).columns
     numeric_features = X.select_dtypes(include=['int64', 'float64']).columns
@@ -58,9 +58,10 @@ def prepare_data(input_path, target_column='Survived'):
     X_transformed = preprocessor.fit_transform(X)
 
     # Diviser les données en train/test
-    X_train, X_test, y_train, y_test = train_test_split(X_transformed, y, test_size=0.2, random_state=42)
-
-    return X_train, X_test, y_train, y_test
+    if target_column is not None : 
+        X_train, X_test, y_train, y_test = train_test_split(X_transformed, y, test_size=0.2, random_state=42)
+        return X_train, X_test, y_train, y_test
+    else : return X_transformed
 
 
 

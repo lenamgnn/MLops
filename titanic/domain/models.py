@@ -30,7 +30,7 @@ def save_model(model, file_path="models/gradient_boosting.pkl"):
         None
     """
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    joblib.dump(model, file_path)
+    joblib.dump(model, open(file_path,'wb'))
     print(f"Modèle sauvegardé dans {file_path}.")
 
 def load_model(file_path="models/gradient_boosting.pkl"):
