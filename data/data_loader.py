@@ -1,13 +1,15 @@
-
 import pandas as pd
 import os
+
+# Récupérer le chemin du dossier contenant ce script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def load_data(file_path):
     """
     Charge un fichier CSV en tant que DataFrame Pandas.
 
     Args:
-        file_path (str): Chemin complet vers le fichier CSV.
+        file_path (str): Chemin relatif ou absolu vers le fichier CSV.
 
     Returns:
         pd.DataFrame: DataFrame contenant les données chargées.
@@ -16,13 +18,15 @@ def load_data(file_path):
         FileNotFoundError: Si le fichier n'existe pas.
         ValueError: Si le fichier est vide.
     """
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"Le fichier {file_path} n'existe pas.")
+    full_path = os.path.join(BASE_DIR, file_path)
 
-    df = pd.read_csv(file_path)
+    if not os.path.exists(full_path):
+        raise FileNotFoundError(f"Le fichier {full_path} n'existe pas.")
+
+    df = pd.read_csv(full_path)
 
     if df.empty:
-        raise ValueError(f"Le fichier {file_path} est vide.")
+        raise ValueError(f"Le fichier {full_path} est vide.")
 
     return df
 
@@ -32,13 +36,15 @@ def save_data(df, output_path):
 
     Args:
         df (pd.DataFrame): DataFrame à sauvegarder.
-        output_path (str): Chemin complet pour le fichier de sortie.
+        output_path (str): Chemin relatif ou absolu pour le fichier de sortie.
 
     Returns:
         None
     """
-    df.to_csv(output_path, index=False)
-    print(f"Données sauvegardées avec succès dans {output_path}.")
+    full_path = os.path.join(BASE_DIR, output_path)
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)  # Crée les dossiers si nécessaire
+    df.to_csv(full_path, index=False)
+    print(f"Données sauvegardées avec succès dans {full_path}.")
 
 
 def load_train_test_data(train_path, test_path):
@@ -62,10 +68,9 @@ def load_train_test_data(train_path, test_path):
     return train_df, test_df
 
 if __name__ == "__main__":
-    # Exemple d'utilisation
-    train_path = "MLops/data/raw/train.csv"
-    test_path = "MLops/data/raw/test.csv"
-
+    # Chemins relatifs des fichiers
+    train_path = "raw/train.csv"
+    test_path = "raw/test.csv"
 
     # Charger les données
     train_df, test_df = load_train_test_data(train_path, test_path)
@@ -78,7 +83,5 @@ if __name__ == "__main__":
     print(test_df.head())
 
     # Sauvegarder un exemple après modification
-    processed_path = "MLops/data/processed/processed_train.csv"
+    processed_path = "processed/processed_train.csv"
     save_data(train_df, processed_path)
-
-
